@@ -11,6 +11,15 @@ require('hardhat-spdx-license-identifier');
 require('hardhat-watcher');
 const { fornoURLs, ICeloNetwork } = require('@ubeswap/hardhat-celo');
 const { removeConsoleLog } = require('hardhat-preprocessor');
+const {task} = require('hardhat/config');
+const {deploy} = require('./scripts/deploy.js');
+
+task(
+    "deploy",
+    "Deploys a contract",
+    async (...args) => {
+    return await deploy(...args);
+});
 
 const accounts = {
     mnemonic:
