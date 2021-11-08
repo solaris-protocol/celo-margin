@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.css"],"names":[],"mappings":"AAMA,4BACE,UACF","file":"main.5b2b1473.chunk.css","sourcesContent":["/* HACK: Fix title color in wallet modal */\n.tw-font-medium {\n  color: black;\n}\n\n/* HACK: Fix title color in wallet modal */\n.tw-text-lg {\n  color: black;\n}\n"]}
