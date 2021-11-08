@@ -1,6 +1,6 @@
 import { Percent } from '@ubeswap/sdk'
-import { isDualTradeBetter } from 'components/swap/routing/hooks/calculateBestTrades'
-import { UbeswapTrade } from 'components/swap/routing/trade'
+import { isDualTradeBetter } from 'components/pages/_old/swap/routing/hooks/calculateBestTrades'
+import { UbeswapTrade } from 'components/pages/_old/swap/routing/trade'
 
 import { ZERO_PERCENT } from './../constants/index'
 

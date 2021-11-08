@@ -8,6 +8,7 @@ import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components'
 
+import bgLines from '../assets/images/bg-lines.svg'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'
 
@@ -43,15 +44,15 @@ export function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text2: darkMode ? '#907A99' : '#565A69',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
+    bg1: darkMode ? '#130E14' : '#FFFFFF', // side modal
+    bg2: darkMode ? '#0E0A10' : '#F7F8FA', // body bg
+    bg3: darkMode ? '#1F1A22' : '#EDEEF2', // top buttons
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
 
@@ -179,7 +180,7 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-display: fallback;
 }
 
@@ -190,7 +191,7 @@ body {
 }
 
  a {
-   color: ${colors(false).blue1}; 
+   color: ${colors(false).blue1};
  }
 
 * {
@@ -199,6 +200,16 @@ body {
 
 button {
   user-select: none;
+  white-space: nowrap;
+
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+
+  transition: color 0.3s;
+
+  appearance: none;
 }
 
 html {
@@ -208,6 +219,20 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+}
+
+&::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+&::-webkit-scrollbar-track {
+    background: none;
+}
+
+&::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
 }
 `
 
@@ -226,5 +251,18 @@ body {
       1,
       theme.bg1
     )} 100%)`};
+
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background: url(${bgLines}) no-repeat 50% 0;
+    opacity: 0.5;
+
+    content: '';
+  }
 }
 `

@@ -39,6 +39,10 @@ export function useWalletModalToggle(): () => void {
   return address === null ? connect : toggle
 }
 
+export function useToggleWalletSelectModal(): () => void {
+  return useToggleModal(ApplicationModal.SELECT_WALLET)
+}
+
 export function useToggleSettingsMenu(): () => void {
   return useToggleModal(ApplicationModal.SETTINGS)
 }

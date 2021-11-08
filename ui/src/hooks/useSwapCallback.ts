@@ -2,7 +2,7 @@ import { useContractKit, useGetConnectedSigner, useProvider } from '@celo-tools/
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { JSBI, Percent, Router, SwapParameters, Trade } from '@ubeswap/sdk'
-import { MoolaRouterTrade } from 'components/swap/routing/hooks/useTrade'
+import { MoolaRouterTrade } from 'components/pages/_old/swap/routing/hooks/useTrade'
 import { ContractTransaction } from 'ethers'
 import { useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
