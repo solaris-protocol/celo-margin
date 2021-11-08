@@ -47,6 +47,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^1.1.1",
     "ethers": "^5.3.1",
+    "gh-pages": "^3.2.3",
     "husky": ">=6",
     "i18next": "^20.3.1",
     "i18next-browser-languagedetector": "^6.1.1",
@@ -82,7 +83,7 @@
   },
   "scripts": {
     "build": "REACT_APP_SENTRY_DSN=$SENTRY_DSN npm run build:local",
-    "build:local": "npm run typechain && craco build",
+    "build:local": "REACT_APP_CHAIN_ID=44787 npm run typechain && craco build",
     "start": "craco start",
     "clean": "rm -fr src/generated/",
     "start:alfajores": "REACT_APP_CHAIN_ID=44787 craco start",
@@ -90,7 +91,9 @@
     "test": "craco test --env=jsdom",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
