@@ -4,11 +4,9 @@ const path = require('path');
 const {networkNames } = require("@ubeswap/hardhat-celo");
 require('dotenv/config');
 
-const {getMoolaV2LendingPoolAddressProvider, getMoolaV2Oracle, getUbeswapRouterAddress, getMoolaV2ProtocolDataProvider} = require("../constants");
+const HelloWorld = require("../artifacts/contracts/HelloWorld.sol/HelloWorld.json");
 
-const SolarisMargin = require("../artifacts/contracts/SolarisMargin.sol/SolarisMargin.json");
-
-const salt = "Solaris Margin 1111111";
+const salt = "Solaris Margin salt";
 
 const makeConfigPath = (contractName, chainId) => path.resolve(__dirname, `../ui/src/deployments/${contractName}.${networkNames[chainId]}.address.json`);
 
@@ -25,9 +23,6 @@ const getDeployment = async (contractName, chainId) => {
 
 const deploy = async (_, env) => {
     const chainId = await env.celo.kit.connection.chainId();
-    const moolaV2LendingPoolAddressProvider = getMoolaV2LendingPoolAddressProvider(networkNames[chainId]);
-    const mooldaV2ProtocolDataProvider = getMoolaV2ProtocolDataProvider(networkNames[chainId]);
-    const ubeswapRouterAddress = getUbeswapRouterAddress(networkNames[chainId]);
 
     const [deployer] = env.celo.getSigners();
 
@@ -38,17 +33,17 @@ const deploy = async (_, env) => {
     const deployerAddress = await deployer.getAddress();
     console.log("Deployer address: " + deployerAddress);
 
-    console.log("Deploying SolarisMargin Contract...");
+    console.log("Deploying HelloWorld Contract...");
 
-    const SolarisMarginContract = await deployContract({
+    const HelloWorldContract = await deployContract({
         salt,
-        contractBytecode: SolarisMargin.bytecode,
+        contractBytecode: HelloWorld.bytecode,
         signer: deployer,
-        constructorTypes: ["address", "address", "address"],
-        constructorArgs: [moolaV2LendingPoolAddressProvider, mooldaV2ProtocolDataProvider, ubeswapRouterAddress],
+        constructorTypes: ["address"],
+        constructorArgs: [await deployer.getAddress()],
     });
 
-    await writeDeployment('SolarisMargin', chainId, SolarisMarginContract.address);
+    await writeDeployment('HelloWorld', chainId, HelloWorldContract.address);
 }
 
 module.exports = {deploy, getDeployment};

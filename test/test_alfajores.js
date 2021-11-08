@@ -33,29 +33,28 @@ contract('SolarisMargin', async function () {
 
         const SolarisMarginCeloBalance = await this.goldToken.balanceOf(this.solarisMargin._address);
 
-        if (!SolarisMarginCeloBalance.gt(toBN(1000))) {
-            const tx = await this.goldToken.transfer(this.solarisMargin._address, 1000).send({from: account.address});
+        if (!SolarisMarginCeloBalance.gt(toBN(1000001))) {
+            const tx = await this.goldToken.transfer(this.solarisMargin._address, 1000001).send({from: account.address});
             await tx.waitReceipt();
         }
 
         const SolarisMarginCeloBalanceAfter = await this.goldToken.balanceOf(this.solarisMargin._address);
 
-        console.log(`###: SolarisMarginCeloBalanceAfter`, SolarisMarginCeloBalanceAfter.gt(0));
+        console.log(`###: SolarisMarginCeloBalanceAfter`, SolarisMarginCeloBalanceAfter.gt(1000000));
     });
 
     describe('Solaris Margin', function () {
         it('opens long position', async function () {
             console.log(`###: this.ASSET_ADDRESSES['cUSD']`, this.ASSET_ADDRESSES['cUSD']);
             console.log(`###: this.ASSET_ADDRESSES['cUSD']`, this.ASSET_ADDRESSES['CELO']);
-            // try {
-            //     const txo = this.solarisMargin.methods.openLongPosition(this.ASSET_ADDRESSES['cUSD'], this.ASSET_ADDRESSES['CELO'], ether('1'), 1, '0x');
-            //     const tx = await kit.sendTransactionObject(txo, { from: account.address });
-            //     const hash = await tx.getHash();
-            //     const receipt = await tx.waitReceipt();
-            //     console.log(`###: receipt`, receipt);
-            // } catch (e) {
-            //     console.log(`###: e`, e)
-            // }
+            try {
+                const txo = this.solarisMargin.methods.openLongPosition(this.ASSET_ADDRESSES['CELO'], this.ASSET_ADDRESSES['cUSD'], 100, 1, '0x');
+                const tx = await kit.sendTransactionObject(txo, { from: account.address });
+                const receipt = await tx.waitReceipt();
+                console.log(`###: receipt`, receipt);
+            } catch (e) {
+                console.log(`###: e`, e)
+            }
             const name = await this.solarisMargin.methods.getName().call();
             console.log(`###: name`, name);
 
