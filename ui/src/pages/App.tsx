@@ -13,7 +13,7 @@ import { URLWarning } from '../components/common/URLWarning'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { getMobileOperatingSystem, Mobile } from '../utils/mobile'
 import Swap from './_old/Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './_old/Swap/redirects'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToTradeOnly, RedirectToSwap } from './_old/Swap/redirects'
 import { Trade } from './trade'
 
 const AppWrapper = styled.div`
@@ -110,7 +110,7 @@ export default function App() {
               {/*<Route exact strict path="/farm/:currencyIdA/:currencyIdB/:stakingAddress" component={Manage} />*/}
               {/*<Route exact strict path="/dualfarm/:currencyIdA/:currencyIdB/:stakingAddress" component={Manage} />*/}
               {/*<Route exact strict path="/Bridge" component={Bridge} />*/}
-              <Route component={RedirectPathToSwapOnly} />
+              <Route component={RedirectPathToTradeOnly} />
             </Switch>
           </ErrorBoundary>
           <PoweredBy />
