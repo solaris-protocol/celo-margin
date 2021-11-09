@@ -13,7 +13,7 @@ export const Rate: FC = () => {
   const cUSDPrice: BN | undefined = useSingleCallResult(moolaOracle, 'getAssetPrice', [tokenA.address])?.result?.[0]
   const cUSDPriceInteger = Number(fromWei(cUSDPrice?.toString() || '0', 'ether'))
 
-  const rate = cUSDPriceInteger.toFixed(2)
+  const rate = cUSDPriceInteger ? (1 / cUSDPriceInteger).toFixed(2) : 0
 
   return <>1 Celo ≈ {rate} cUSD</>
 }

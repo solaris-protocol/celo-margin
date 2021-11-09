@@ -56,7 +56,7 @@ export const Get: FC<Props> = ({ token }) => {
       return toBN(0)
     }
 
-    return toBN(valueA).mul(toBN(leverage).subn(1)).muln(rate)
+    return toBN(valueA).mul(toBN(leverage)).muln(cUSDPriceInteger)
   }, [valueA, cUSDPrice, leverage])
 
   return (
@@ -74,7 +74,7 @@ export const Get: FC<Props> = ({ token }) => {
           <Rate />
           {loanAmount ? (
             <BalanceUSD>
-              {loanAmount.divn(rate).toString()} {tokenA.symbol}
+              {loanAmount.muln(rate).toString()} {tokenA.symbol}
             </BalanceUSD>
           ) : null}
         </Row>
