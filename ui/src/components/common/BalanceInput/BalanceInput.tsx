@@ -44,7 +44,7 @@ export const BalanceInput: FC<Props> = ({ maxValue, value, onChange }) => {
       return
     }
 
-    onChange(maxValue.toFixed(2, { groupSeparator: ',' }))
+    onChange(maxValue.toFixed(0))
   }
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
