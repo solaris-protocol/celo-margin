@@ -1,3 +1,4 @@
+import { TokenAmount } from '@ubeswap/sdk'
 import { ReactComponent as CloseIcon } from 'assets/icons/close-icon.svg'
 import { rgba } from 'polished'
 import React, { FC } from 'react'
@@ -32,11 +33,20 @@ const CloseIconStyled = styled(CloseIcon)`
 `
 
 interface Props {
+  maxValue?: TokenAmount
   value: string
   onChange: (nextValue: string) => void
 }
 
-export const BalanceInput: FC<Props> = ({ value, onChange }) => {
+export const BalanceInput: FC<Props> = ({ maxValue, value, onChange }) => {
+  const handleMaxClick = () => {
+    if (!maxValue) {
+      return
+    }
+
+    onChange(maxValue.toFixed(2, { groupSeparator: ',' }))
+  }
+
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value)
   }
@@ -47,7 +57,7 @@ export const BalanceInput: FC<Props> = ({ value, onChange }) => {
 
   return (
     <Wrapper>
-      {!value && <ButtonMaxStyled>Max</ButtonMaxStyled>}
+      {!value && maxValue && <ButtonMaxStyled onClick={handleMaxClick}>Max</ButtonMaxStyled>}
       <Input placeholder="0" value={value} onChange={handleValueChange} />
       {value ? (
         <IconWrapper onClick={handleValueClear}>

@@ -1,6 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { cUSD, TokenAmount } from '@ubeswap/sdk'
-import { ChainId as UbeswapChainId } from '@ubeswap/sdk/dist/constants'
+import { Token, TokenAmount } from '@ubeswap/sdk'
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet-icon.svg'
 import classNames from 'classnames'
 import { rgba } from 'polished'
@@ -57,20 +56,17 @@ const InputBlock = styled(InputBlockBase)`
 `
 
 interface Props {
+  token: Token
   value: string
   setValue: (nextValue: string) => void
   state: StateType
   setState: (state: StateType) => void
 }
 
-export const PayRepay: FC<Props> = ({ value, setValue, state, setState }) => {
-  const {
-    address: wallet,
-    network: { chainId },
-  } = useContractKit()
-  const CUSD = cUSD[chainId as unknown as UbeswapChainId]
-  const currency = CUSD // useCurrency('0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1') // 0x765DE816845861e75A25fCA122bb6898B8B1282a
-  const balance: TokenAmount | undefined = useCurrencyBalance(wallet ?? undefined, currency ?? undefined)
+export const PayRepay: FC<Props> = ({ token, value, setValue, state, setState }) => {
+  const { address: wallet } = useContractKit()
+
+  const balance: TokenAmount | undefined = useCurrencyBalance(wallet ?? undefined, token ?? undefined)
 
   return (
     <Wrapper>
@@ -85,12 +81,12 @@ export const PayRepay: FC<Props> = ({ value, setValue, state, setState }) => {
         </Group>
         <Balance>
           <WalletIconStyled />
-          {balance?.toFixed(2, { groupSeparator: ',' }) ?? '0'} {currency?.symbol}
+          {balance?.toFixed(2, { groupSeparator: ',' }) ?? '0'} {token?.symbol}
         </Balance>
       </Header>
       <InputBlock className={classNames({ active: !!value })}>
-        <TokenSelect currency={currency} />
-        <BalanceInput value={value} onChange={(nextValue) => setValue(nextValue)} />
+        <TokenSelect currency={token} />
+        <BalanceInput maxValue={balance} value={value} onChange={(nextValue) => setValue(nextValue)} />
       </InputBlock>
     </Wrapper>
   )

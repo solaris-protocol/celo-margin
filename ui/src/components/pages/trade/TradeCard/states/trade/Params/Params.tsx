@@ -4,6 +4,7 @@ import { rgba } from 'polished'
 import React, { FC, useState } from 'react'
 import styled from 'styled-components'
 
+import { useTrade } from '../../../../../../../app/contexts/trade'
 import { SubTitle } from '../../../common/styled'
 
 const Wrapper = styled.div`
@@ -58,13 +59,16 @@ const Value = styled.div`
   &.active {
     color: ${({ theme }) => theme.text1};
   }
+
+  &.disabled {
+    cursor: not-allowed;
+  }
 `
 
 interface Props {}
 
 export const Params: FC<Props> = (props) => {
-  const [position, setPosition] = useState(0)
-  const [leverage, setLeverage] = useState(2)
+  const { position, setPosition, leverage, setLeverage } = useTrade()
   const [isCustom, setIsCustom] = useState(false)
 
   const handleLeverageCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +87,7 @@ export const Params: FC<Props> = (props) => {
           <Value onClick={() => setPosition(0)} className={classNames({ active: position === 0 })}>
             Long
           </Value>
-          <Value onClick={() => setPosition(1)} className={classNames({ active: position === 1 })}>
+          <Value onClick={() => {}} className={classNames({ active: position === 1, disabled: true })}>
             Short
           </Value>
         </Values>

@@ -12,8 +12,7 @@ import { Polling } from '../components/common/Polling'
 import { URLWarning } from '../components/common/URLWarning'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { getMobileOperatingSystem, Mobile } from '../utils/mobile'
-import Swap from './_old/Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToTradeOnly, RedirectToSwap } from './_old/Swap/redirects'
+import { RedirectPathToTradeOnly } from './_old/Swap/redirects'
 import { Trade } from './trade'
 
 const AppWrapper = styled.div`
@@ -91,9 +90,9 @@ export default function App() {
           <ErrorBoundary fallback={<p>An unexpected error occured on this part of the page. Please reload.</p>}>
             <Switch>
               <Route exact strict path="/trade" component={Trade} />
-              <Route exact strict path="/swap" component={Swap} />
-              <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+              {/*<Route exact strict path="/swap" component={Swap} />*/}
+              {/*<Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />*/}
+              {/*<Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />*/}
               {/*<Route exact strict path="/send" component={Send} />*/}
               {/*<Route exact strict path="/find" component={PoolFinder} />*/}
               {/*<Route exact strict path="/pool" component={Pool} />*/}

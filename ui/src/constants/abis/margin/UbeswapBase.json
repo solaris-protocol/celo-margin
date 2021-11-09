@@ -1,0 +1,15 @@
+[
+  {
+    "inputs": [],
+    "name": "UBESWAP_ROUTER",
+    "outputs": [
+      {
+        "internalType": "contract IUniswapV2Router02",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

@@ -45,7 +45,7 @@ const Span = styled(InputElement)`
 `
 
 interface Props {
-  onlyDecimal: boolean
+  onlyDecimal?: boolean
 }
 
 // TODO: Try to implement a less complex logic

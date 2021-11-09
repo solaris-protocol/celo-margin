@@ -1,3 +1,4 @@
+import MoolaOracle from '@aave/protocol-v2/artifacts/contracts/misc/AaveOracle.sol/AaveOracle.json'
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { Contract } from '@ethersproject/contracts'
 import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
@@ -6,12 +7,14 @@ import { useMemo } from 'react'
 
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ERC20_ABI, { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import MOOLAV2_IPROTOCOL_DATA_PROVIDER_ABI from '../constants/abis/margin/IProtocolDataProvider.json'
+import SOLARIS_MARGIN_ABI from '../constants/abis/margin/SolarisMargin.json'
 import DUAL_REWARDS_ABI from '../constants/abis/moola/MoolaStakingRewards.json'
 import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
 import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { Erc20, MoolaStakingRewards, PoolManager, StakingRewards } from '../generated'
+import { Erc20, MoolaStakingRewards, PoolManager, SolarisMargin, StakingRewards } from '../generated'
 import { getContract } from '../utils'
 
 // returns null on errors
@@ -28,6 +31,26 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+}
+
+export function useMoolaV2IProtocolDataProviderContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract(
+    '0x31ccB9dC068058672D96E92BAf96B1607855822E',
+    MOOLAV2_IPROTOCOL_DATA_PROVIDER_ABI,
+    withSignerIfPossible
+  )
+}
+
+export function useMoolaOracleContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x88A4a87eF224D8b1F463708D0CD62b17De593DAd', MoolaOracle.abi, withSignerIfPossible)
+}
+
+export function useMarginContract(withSignerIfPossible?: boolean): SolarisMargin | null {
+  return useContract(
+    '0x8a19904028eCb44CFaFbeD037B9bB81aa54b0abC', // '0xcF19FEB7CFD740c4C9A53c78368642d17FFAf859',
+    SOLARIS_MARGIN_ABI,
+    withSignerIfPossible
+  ) as SolarisMargin | null
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Erc20 | null {

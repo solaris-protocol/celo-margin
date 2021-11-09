@@ -1,6 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
-import { CELO } from '@ubeswap/sdk'
-import { ChainId as UbeswapChainId } from '@ubeswap/sdk/dist/constants'
+import { Token } from '@ubeswap/sdk'
 import Row from 'components/common/Row'
 import { rgba } from 'polished'
 import React, { FC } from 'react'
@@ -35,14 +33,11 @@ const ValueLine = styled.div`
 
 const BalanceUSD = styled.div``
 
-interface Props {}
+interface Props {
+  token: Token
+}
 
-export const Get: FC<Props> = (props) => {
-  const {
-    network: { chainId },
-  } = useContractKit()
-  const celo = CELO[chainId as unknown as UbeswapChainId]
-  const currency = celo // useCurrency('0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9') // 0x471EcE3750Da237f93B8E339c536989b8978a438
+export const Get: FC<Props> = ({ token }) => {
   const value = 0
 
   return (
@@ -52,7 +47,7 @@ export const Get: FC<Props> = (props) => {
         <Reverse onClick={() => {}} />
       </Row>
       <InputBlock>
-        <TokenSelect currency={currency} />
+        <TokenSelect currency={token} />
         <Balance>{value}</Balance>
       </InputBlock>
       <ValueLine>
