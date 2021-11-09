@@ -27,9 +27,9 @@ export const StyledClose = styled(X)`
 const defaultAppUrl = 'app.ubeswap.org'
 
 const appURL: Record<string, string> = {
-  [ChainId.MAINNET]: 'app.ubeswap.org',
-  [ChainId.ALFAJORES]: 'app-alfajores.ubeswap.org',
-  [ChainId.BAKLAVA]: 'app-baklava.ubeswap.org',
+  [ChainId.MAINNET]: 'solaris-protocol.github.io/celo-margin',
+  [ChainId.ALFAJORES]: 'solaris-protocol.github.io/celo-margin',
+  [ChainId.BAKLAVA]: 'solaris-protocol.github.io/celo-margin',
 }
 
 export default function URLWarning() {
