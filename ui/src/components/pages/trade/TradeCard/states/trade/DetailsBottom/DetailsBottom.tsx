@@ -1,8 +1,13 @@
+import { useTrade } from 'app/contexts/trade'
+import BN from 'bn.js'
 import classNames from 'classnames'
 import { rgba } from 'polished'
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 import styled from 'styled-components'
+import { fromWei, toBN } from 'web3-utils'
 
+import { useMoolaOracleContract } from '../../../../../../../hooks/useContract'
+import { useSingleCallResult } from '../../../../../../../state/multicall/hooks'
 import { SubTitle } from '../../../common/styled'
 
 const Wrapper = styled.div`
@@ -44,15 +49,34 @@ interface Props {
 }
 
 export const DetailsBottom: FC<Props> = ({ show }) => {
+  const { tokenA, valueA, leverage } = useTrade()
+  const moolaOracle = useMoolaOracleContract()
+
+  const cUSDPrice: BN | undefined = useSingleCallResult(moolaOracle, 'getAssetPrice', [tokenA.address])?.result?.[0]
+  const cUSDPriceInteger = Number(fromWei(cUSDPrice?.toString() || '0', 'ether'))
+  const rate = cUSDPriceInteger ? 1 / cUSDPriceInteger : 1
+
+  const loanAmount = useMemo(() => {
+    if (!cUSDPrice) {
+      return toBN(0)
+    }
+
+    return toBN(valueA).mul(toBN(leverage)).muln(cUSDPriceInteger)
+  }, [valueA, cUSDPrice, leverage])
+
   return (
     <Wrapper className={classNames({ show })}>
       <Column>
         <SubTitle className="secondary medium">Margin Deposit</SubTitle>
-        <Text>1,000 cUSD</Text>
+        <Text>
+          {valueA} {tokenA.symbol}
+        </Text>
       </Column>
       <Column>
         <SubTitle className="secondary medium">Trade amount</SubTitle>
-        <Text>1,000 cUSD</Text>
+        <Text>
+          {loanAmount.muln(rate).toString()} {tokenA.symbol}
+        </Text>
       </Column>
       <Column>
         <SubTitle className="secondary medium">Fee</SubTitle>
