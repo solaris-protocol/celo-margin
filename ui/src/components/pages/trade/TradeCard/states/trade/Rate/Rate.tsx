@@ -6,9 +6,7 @@ import { fromWei } from 'web3-utils'
 
 import { useMoolaOracleContract } from '../../../../../../../hooks/useContract'
 
-interface Props {}
-
-export const Rate: FC<Props> = () => {
+export const Rate: FC = () => {
   const { tokenA } = useTrade()
   const moolaOracle = useMoolaOracleContract()
 
@@ -17,5 +15,5 @@ export const Rate: FC<Props> = () => {
 
   const rate = cUSDPriceInteger.toFixed(2)
 
-  return `1 Celo ≈ ${rate} cUSD `
+  return <>1 Celo ≈ {rate} cUSD</>
 }

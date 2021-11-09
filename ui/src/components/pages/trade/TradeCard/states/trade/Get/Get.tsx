@@ -1,9 +1,14 @@
 import { Token } from '@ubeswap/sdk'
+import BN from 'bn.js'
 import Row from 'components/common/Row'
 import { rgba } from 'polished'
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 import styled from 'styled-components'
+import { fromWei, toBN } from 'web3-utils'
 
+import { useTrade } from '../../../../../../../app/contexts/trade'
+import { useMoolaOracleContract } from '../../../../../../../hooks/useContract'
+import { useSingleCallResult } from '../../../../../../../state/multicall/hooks'
 import { InputBlockBase, SubTitle } from '../../../common/styled'
 import { TokenSelect } from '../../../common/TokenSelect'
 import { Rate } from '../Rate'
@@ -38,7 +43,21 @@ interface Props {
 }
 
 export const Get: FC<Props> = ({ token }) => {
-  const value = 0
+  const { tokenA, valueA, leverage } = useTrade()
+
+  const moolaOracle = useMoolaOracleContract()
+
+  const cUSDPrice: BN | undefined = useSingleCallResult(moolaOracle, 'getAssetPrice', [tokenA.address])?.result?.[0]
+  const cUSDPriceInteger = Number(fromWei(cUSDPrice?.toString() || '0', 'ether'))
+  const rate = cUSDPriceInteger ? 1 / cUSDPriceInteger : 1
+
+  const loanAmount = useMemo(() => {
+    if (!cUSDPrice) {
+      return toBN(0)
+    }
+
+    return toBN(valueA).mul(toBN(leverage).subn(1)).muln(rate)
+  }, [valueA, cUSDPrice, leverage])
 
   return (
     <Wrapper>
@@ -48,12 +67,16 @@ export const Get: FC<Props> = ({ token }) => {
       </Row>
       <InputBlock>
         <TokenSelect currency={token} />
-        <Balance>{value}</Balance>
+        <Balance>{loanAmount.toString()}</Balance>
       </InputBlock>
       <ValueLine>
         <Row justify="space-between">
           <Rate />
-          {value ? <BalanceUSD>2,000 cUSD</BalanceUSD> : null}
+          {loanAmount ? (
+            <BalanceUSD>
+              {loanAmount.divn(rate).toString()} {tokenA.symbol}
+            </BalanceUSD>
+          ) : null}
         </Row>
       </ValueLine>
     </Wrapper>

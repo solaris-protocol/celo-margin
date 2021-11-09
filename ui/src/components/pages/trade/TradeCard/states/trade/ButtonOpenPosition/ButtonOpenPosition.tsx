@@ -1,6 +1,6 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { CELO, cUSD, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
-import { ChainId as UbeswapChainId } from '@ubeswap/sdk/dist/constants'
+import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
+import { useTrade } from 'app/contexts/trade'
 import React, { FC, useCallback } from 'react'
 import styled from 'styled-components'
 import { toBN } from 'web3-utils'
@@ -25,30 +25,23 @@ const ButtonStyled = styled(Button)`
 `
 
 export const ButtonOpenPosition: FC = () => {
-  const {
-    address: wallet,
-    network: { chainId },
-  } = useContractKit()
+  const { address: wallet } = useContractKit()
   const toggleWalletSelectModal = useToggleWalletSelectModal()
+  const { tokenA, tokenB, valueA, leverage } = useTrade()
 
   // const moolaOracle = useMoolaOracleContract()
   const solarisMargin = useMarginContract()
   const moolaV2IProtocolDataProvider = useMoolaV2IProtocolDataProviderContract()
 
-  const CUSD = cUSD[chainId as unknown as UbeswapChainId]
-  const celo = CELO[chainId as unknown as UbeswapChainId]
-
-  const amount = toBN(1000)
   const minAmount = toBN(1)
-  const leverage = toBN(2)
-  const moolaFlashLoanFee = amount.mul(toBN(35)).div(toBN(10000))
+  const moolaFlashLoanFee = toBN(valueA).mul(toBN(35)).div(toBN(10000))
   // const cUSDPrice: BN | undefined = useSingleCallResult(moolaOracle, 'getAssetPrice', [CUSD.address])?.result?.[0]
 
-  const solarisMarginCeloBalance = useTokenBalance(solarisMargin?.address ?? undefined, celo)
+  const solarisMarginCeloBalance = useTokenBalance(solarisMargin?.address ?? undefined, tokenB)
   console.log(`###: SolarisMarginCeloBalance`, solarisMarginCeloBalance?.toFixed())
   // console.log(`###: cUSDPrice`, cUSDPrice?.toString())
 
-  const amountToApprove1 = new TokenAmount(CUSD as Token, JSBI.BigInt(amount.toString())) // tryParseAmount(amount.toString(), CUSD)
+  const amountToApprove1 = new TokenAmount(tokenA as Token, JSBI.BigInt(valueA.toString())) // tryParseAmount(amount.toString(), CUSD)
   const [approval1, approve1] = useApproveCallback(amountToApprove1, solarisMargin?.address)
 
   // const loanAmount = useMemo(() => {
@@ -63,7 +56,7 @@ export const ButtonOpenPosition: FC = () => {
   // }, [amount, cUSDPrice, leverage])
 
   const tokenDetails = useSingleCallResult(moolaV2IProtocolDataProvider, 'getReserveTokensAddresses', [
-    CUSD.address,
+    tokenA.address,
   ])?.result
 
   const stableDebtToken = useToken(tokenDetails?.stableDebtTokenAddress)
@@ -71,7 +64,10 @@ export const ButtonOpenPosition: FC = () => {
   //   ? new TokenAmount(stableDebtToken as Token, JSBI.BigInt(loanAmount.add(moolaFlashLoanFee).toString()))
   //   : undefined
   const amountToApprove2 = stableDebtToken
-    ? new TokenAmount(stableDebtToken as Token, JSBI.BigInt(amount.mul(leverage).add(moolaFlashLoanFee).toString()))
+    ? new TokenAmount(
+        stableDebtToken as Token,
+        JSBI.BigInt(toBN(valueA).mul(toBN(leverage)).add(moolaFlashLoanFee).toString())
+      )
     : undefined
 
   const [approval2, approve2] = useApproveDelegationCallback(amountToApprove2, solarisMargin?.address)
@@ -98,16 +94,16 @@ export const ButtonOpenPosition: FC = () => {
 
     doTransaction(solarisMargin, 'openLongPosition', {
       args: [
-        CUSD.address,
-        celo.address,
+        tokenA.address,
+        tokenB.address,
         // loanAmount.toString(),
-        amount.toString(),
+        valueA.toString(),
         minAmount.toString(),
         leverage.toString(),
       ],
       summary: 'Open long position',
     })
-  }, [CUSD.address, amount, celo.address, doTransaction, leverage, /*loanAmount,*/ solarisMargin])
+  }, [tokenA.address, valueA, tokenB.address, doTransaction, leverage, /*loanAmount,*/ solarisMargin])
 
   if (!wallet) {
     return <ButtonStyled onClick={toggleWalletSelectModal}>Connect wallet</ButtonStyled>
@@ -121,7 +117,7 @@ export const ButtonOpenPosition: FC = () => {
             Approving <Loader stroke="white" />
           </AutoRow>
         ) : (
-          `Approve ${CUSD.symbol}`
+          `Approve ${tokenA.symbol}`
         )}
       </ButtonStyled>
     )
@@ -135,7 +131,7 @@ export const ButtonOpenPosition: FC = () => {
             Approving <Loader stroke="white" />
           </AutoRow>
         ) : (
-          `Approve ${celo.symbol}`
+          `Approve ${tokenB.symbol}`
         )}
       </ButtonStyled>
     )

@@ -1,6 +1,6 @@
 import { useTrade } from 'app/contexts/trade'
 import { rgba } from 'polished'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 
 import { PayRepay } from '../../common/PayRepay'
@@ -25,19 +25,18 @@ interface Props {
 }
 
 export const Trade: FC<Props> = ({ state, setState }) => {
-  const [value, setValue] = useState('')
-  const { tokenA, tokenB } = useTrade()
+  const { tokenA, tokenB, valueA, setValueA } = useTrade()
 
   return (
     <>
-      <TradeBody moveUp={!!value}>
-        <PayRepay token={tokenA} value={value} setValue={setValue} state={state} setState={setState} />
+      <TradeBody moveUp={!!valueA}>
+        <PayRepay token={tokenA} value={valueA} setValue={setValueA} state={state} setState={setState} />
         <Get token={tokenB} />
         <Delimiter />
         <Params />
         <ButtonOpenPosition />
       </TradeBody>
-      <DetailsBottom show={!!value} />
+      <DetailsBottom show={!!valueA} />
     </>
   )
 }

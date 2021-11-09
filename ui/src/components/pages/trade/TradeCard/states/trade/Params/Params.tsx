@@ -65,9 +65,7 @@ const Value = styled.div`
   }
 `
 
-interface Props {}
-
-export const Params: FC<Props> = (props) => {
+export const Params: FC = () => {
   const { position, setPosition, leverage, setLeverage } = useTrade()
   const [isCustom, setIsCustom] = useState(false)
 
